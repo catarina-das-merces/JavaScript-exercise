@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Exercise 2</title>
+</head>
+<body>
+	<script>
+
+// XMLHTTPRequest
+
+function cats () {
+	return new Promise(function (resolve, reject) {
+		var newRequest = new XMLHttpRequest()
+		newRequest.open('GET', 'https://cat-fact.herokuapp.com/facts/')
+		newRequest.responseType = "json";
+		newRequest.send()
+		newRequest.onload = () =>  {
+			const catList = newRequest.response;
+			const getText = catList.map (list => list.text);
+			if (getText.length > 0) {
+				resolve (getText)
+			} else {
+				reject ('Aconteceu um erro!')
+			}
+		}
+	});
+}
+cats ()
+.then ((mensagem) => console.log (mensagem))
+.catch ((error) => console.log (error));
+
+//Fetch
+
+function getCats () {
+fetch('https://cat-fact.herokuapp.com/facts/')
+.then((response) => response.json())
+.then((object) => {
+	const List = object
+	const Text = List.map (list => list.text);
+	console.log (Text);
+})
+.catch((error) => console.log ('Aconteceu um Erro'));
+}
+
+getCats ()
+
+	</script>
+</body>
+</html>
