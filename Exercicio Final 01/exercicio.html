@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Exercicio Final JS</title>
+	<link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+	<script>
+
+		function getAnimes(score) {
+			fetch('https://api.jikan.moe/v4/top/anime')
+				.then((response) => response.json())
+				.then((object) => {
+					const animeList = object.data;
+					//console.log(animeList);
+					const animesScore = animeList.filter(anime => anime.score > score);
+					//console.log(animesScore);
+					displayAnimeList(animesScore);
+				})
+				.catch((error) => console.log('Ocorreu um erro'));
+
+		function displayAnimeList(animesScore) {
+			animesScore.forEach(anime => {
+			const animeTitle = document.createElement('h4');
+			animeTitle.textContent = anime.title;
+
+			const animeImage = document.createElement('img');
+			animeImage.src = anime.images.jpg.large_image_url;
+
+			const container = document.createElement('div');
+			container.appendChild(animeTitle);
+			container.appendChild(animeImage);
+			document.body.prepend(container);
+
+			container.addEventListener('click', function (event) {
+				const sidebar = document.createElement('div');
+				sidebar.classList.add('sidebar');
+				document.body.appendChild(sidebar);
+
+				const animeImage = document.createElement('img');
+				animeImage.classList.add('sidebar-img');
+				animeImage.src = anime.images.jpg.small_image_url;
+				sidebar.appendChild(animeImage);
+
+				const animeName = document.createElement('p');
+				animeName.textContent = `Nome: ${anime.title}`;
+				sidebar.appendChild(animeName);
+
+				const animeRating = document.createElement('p');
+				animeRating.textContent = `Rating: ${anime.rating}`;
+				sidebar.appendChild(animeRating);
+
+				const animeYear = document.createElement('p');
+				animeYear.textContent = `Data de Lançamento: ${anime.year}`;
+				sidebar.appendChild(animeYear);
+
+				const animeGenre = document.createElement('p');
+				animeGenre.textContent = `Géneros: ${anime.genres.map(genre => genre.name).join(", ")}`;
+				sidebar.appendChild(animeGenre);
+
+				setTimeout(function () {
+					sidebar.remove();
+				}, 2000);
+
+				});
+			});
+		}
+	}
+
+	getAnimes(9);
+
+	const footer = document.createElement('footer')
+	footer.classList.add('footer')
+	footer.textContent = new Date().getFullYear() + ' ©️ Catarina Ferreira'
+	document.body.prepend(footer)
+	
+	</script>
+</body>
+
+</html>
