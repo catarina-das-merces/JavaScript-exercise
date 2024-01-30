@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+	<script>
+
+		class Ecommerce {
+			constructor() {
+			this.storeProducts = [];
+			this.cart = [];
+  	}
+
+		addProduct(product) {
+			const newProduct = {name: product, productId:this.storeProducts.length+1, price: 0}
+			this.storeProducts.push(newProduct)
+    	return newProduct;
+			
+		}
+
+		setProductPrice (productId, price) {
+			const productsById = this.storeProducts.find((product => product.productId === productId))
+			
+			if (productsById) {
+				productsById.price = price;
+			} else {
+				console.log ('Produto não encontrado')
+			}
+		}
+
+		getAllProducts () {
+			return this.storeProducts;
+		}
+
+		getAllProductsNames() {
+			const productsName = this.storeProducts.map(product => product.name).join('; ');
+			console.log (`Os nomes dos produtos são ${productsName}`)
+		}
+
+		getProductById(productId) {
+			return this.storeProducts.find(product => product.productId === productId)
+		}
+
+		getProductByName (name) {
+			return this.storeProducts.find(product => product.name === name)
+		}
+
+		getProductsByPrice(initialPrice, finalPrice) {
+    	const productsByPrice = this.storeProducts.filter(product => product.price >= initialPrice && product.price <= finalPrice);
+			
+
+			if (productsByPrice.length > 0 ) {
+				return (productsByPrice);
+			} else {
+				return ('Não Existem Produtos neste intervalo de valores')
+			}
+ 	 }
+
+		addProductToCart (product) {
+			return this.cart.push(product);
+		}
+
+		getCart() {
+    	return this.cart
+  	}
+
+		getCartTotalPrice() {
+			const initialValue = 0
+			const soma = this.cart.reduce(
+				(acumulator, currentValue) => acumulator + currentValue.price,
+				initialValue
+			);
+			return soma
+  	}
+	}
+	
+	
+
+	const product = new Ecommerce ()
+
+	// add Product
+	const product1 = product.addProduct('Sapatilhas')
+	const product2 = product.addProduct('SweatShirt')
+	const product3 = product.addProduct('Calças')
+
+	// set Price
+	product.setProductPrice(1, 120)
+	product.setProductPrice(2, 90)
+	product.setProductPrice(3, 100)
+
+	// get All Products
+	console.log (product.getAllProducts())
+
+
+	// get All Products
+	product.getAllProductsNames()
+
+	//get Products by ID
+	console.log (product.getProductById(2))
+
+	//get Products by Name
+	console.log(product.getProductByName('Sapatilhas'))
+
+	// get Products by Price
+	console.log(product.getProductsByPrice(90,100))
+
+	//add Product to Cart
+	product.addProductToCart(product1)
+	product.addProductToCart(product3)
+
+	// get Cart 
+	console.log(product.getCart())
+
+	// get Cart Total
+	console.log (product.getCartTotalPrice())
+	
+	
+	console.log (product.storeProducts)
+	</script>
+</body>
+</html>

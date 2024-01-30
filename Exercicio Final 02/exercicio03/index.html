@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<link rel="stylesheet" href="style.css" />
+	</head>
+	<body onload="getProductFromApi()">
+		<script>
+			const url = "https://fakestoreapi.com/products/8";
+			function getProductFromApi() {
+				fetch(url)
+					.then((response) => response.json())
+					.then((data) => {
+						const product = data;
+						//console.log(product);
+						const parts = url.split("/");
+						const product_id = parts[parts.length - 1];
+						//console.log(product_id);
+						displayProduct(product, product_id);
+					})
+					.catch((error) => console.log("Ocorreu um erro"));
+			}
+
+			function displayProduct(product, product_id) {
+				const productTitle = document.createElement("h4");
+				productTitle.textContent = product.title;
+
+				const productImage = document.createElement("img");
+				productImage.src = product.image;
+
+				const productCategory = document.createElement("p");
+				productCategory.textContent = product.category;
+
+				const productDescription = document.createElement("p");
+				productDescription.textContent = product.description;
+
+				const productPrice = document.createElement("p");
+				productPrice.textContent = product.price;
+
+				const productId = document.createElement("p");
+				productId.textContent = `ID do produto: ${product_id}`;
+
+				const container = document.createElement("div");
+				container.appendChild(productTitle);
+				container.appendChild(productImage);
+				container.appendChild(productCategory);
+				container.appendChild(productDescription);
+				container.appendChild(productPrice);
+				container.appendChild(productId);
+				document.body.prepend(container);
+
+				const findCategory = product.category;
+				productByCategory(findCategory);
+				//console.log(findCategory);
+			}
+
+			async function productByCategory(findCategory) {
+				let response = await fetch(
+					`https://fakestoreapi.com/products/category/${findCategory}`
+				);
+				let data = await response.json();
+				const products = data.slice(0, 3);
+				//console.log(products);
+				displayCategoryProducts(products);
+			}
+
+			function displayCategoryProducts(products) {
+				products.forEach((product) => {
+					const productTitle = document.createElement("h5");
+					productTitle.textContent = product.title;
+
+					const productId = document.createElement("p");
+					productId.textContent = product.id;
+
+					const productImage = document.createElement("img");
+					productImage.classList.add("category-img");
+					productImage.src = product.image;
+
+					const container = document.createElement("div");
+					container.classList.add("category-div");
+					container.appendChild(productTitle);
+					container.appendChild(productId);
+					container.appendChild(productImage);
+					document.body.append(container);
+				});
+			}
+
+			const footer = document.createElement("footer");
+			footer.textContent = "Copyright " + new Date().getFullYear();
+			document.body.append(footer);
+		</script>
+	</body>
+</html>

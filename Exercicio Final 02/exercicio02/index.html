@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<link rel="stylesheet" href="/exercicio02/style.css">
+
+	
+</head>
+<body onload="getProducts()">
+	<script>
+
+		function getProducts() {
+			fetch('https://fakestoreapi.com/products')
+				.then((response) => response.json())
+				.then((data) => { 
+					const productsList = data;
+					//console.log(productsList);
+					displayProducts (productsList);
+				})
+				.catch((error) => console.log('Ocorreu um erro'));
+			}
+
+
+		function displayProducts (productsList) {
+			productsList.forEach(product => {
+
+				const productTitle = document.createElement('h4');
+				productTitle.textContent = product.title;
+
+				const productImage = document.createElement('img');
+				productImage.src = product.image;
+
+				const addToCartButton = document.createElement('button');
+				addToCartButton.textContent = 'Add to cart';
+				addToCartButton.addEventListener('click', () => addToCart(product))
+
+				const container = document.createElement('div');
+				container.appendChild(productTitle);
+				container.appendChild(productImage);
+				container.appendChild(addToCartButton);
+				document.body.prepend(container);
+			});
+		}
+			
+	 	async	function addToCart(product) {
+	
+			const url = 'https://fakestoreapi.com/carts/7';
+			const date = new Date().toISOString().split('T')[0]
+		
+			const cartInfo = {
+				userId: 1,
+				date: date,
+				products: [
+					{
+						productId: product.id,
+						quantity: 1,
+					}
+				]
+			}
+
+			const options = {
+				method: 'PUT',
+				body: JSON.stringify(cartInfo)
+			}
+
+			const response = await fetch (url, options)
+			if (response.status === 200) {
+				console.log ('Update bem sucedido')
+			} else {
+				console.log ('ERRO: Update não realizado')
+			}
+		}
+			
+		
+	</script>
+</body>
+</html>
